@@ -1,0 +1,66 @@
+page-game-play {
+
+  .killer {
+    background-color: rgba(0, 153, 0, 0.7);
+  }
+
+  .killed {
+    background-color: rgba(255, 77, 77, 0.7)
+  }
+
+  ion-scroll {
+    height: 50vh;
+  }
+
+  .methods {
+    text-align: center;
+  }
+
+  #add-move {
+    margin: 0 auto;
+    margin-top: 25px;
+  }
+
+  #cancel-move {
+    margin: 0 auto;
+    margin-bottom: 25px;
+  }
+
+  #end-game {
+    margin-top: 25px;
+  }
+
+  .square {
+    min-height: 15vh;
+    height: 100%;
+    width: 100%;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .square-player {
+    }
+
+    .square-number {
+      position: absolute;
+      font-size: 2em;
+      color: #d0d0d0;
+      top: 5px;
+      left: 5px;
+    }
+  }
+
+  .timer-bar {
+    height: 3px;
+    width: 100%;
+
+    span {
+      display: block;
+      height: 100%;
+      background-color: blue;
+      transition: width .4s ease-in-out;
+    }
+  }
+
+}

@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-buttons start>
+      <button ion-button icon-only (click)='displayTimer($event)'>
+        <ion-icon name="timer"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Play Game</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)='displayPlayerSelect()'>
+        <ion-icon name="people"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div class="timer-bar">
+    <span [style.width]="timeRemaining"></span>
+  </div>
+
+  <!-- Squares here -->
+  <ion-grid id="court">
+    <ion-row>
+      <ion-col class="square" id="square-2" col-6 (click)='collectMoveData($event)'>
+        <span class="square-number">2</span>
+        <div class="square-player" id='square-2-player'>{{ activePlayers[1] }}</div>
+      </ion-col>
+      <ion-col class="square" id="square-1" idcol-6 (click)='collectMoveData($event)'>
+        <span class="square-number">1</span>
+        <div class="square-player" id='square-1-player'>{{ activePlayers[0] }}</div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="square" id="square-3" col-6 (click)='collectMoveData($event)'>
+        <span class="square-number">3</span>
+        <div class="square-player" id='square-3-player'>{{ activePlayers[2] }}</div>
+      </ion-col>
+      <ion-col class="square" id="square-4" col-6 (click)='collectMoveData($event)'>
+        <span class="square-number">4</span>
+        <div class="square-player" id='square-4-player'>{{ activePlayers[3] }}</div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Methods here -->
+  <button id="add-move" ion-button full color="primary" (click)='addMove()'>Add Move</button>
+  <button id="cancel-move" ion-button full clear color="secondary" (click)='cancelMove()'>Cancel Move</button>
+
+  <ion-scroll scrollY="true">
+    <!-- List of players here -->
+    <ion-list reorder="true" (ionItemReorder)="reorderPlayers($event)">
+      <ion-item *ngFor='let player of gamePlayers'>
+        <ion-icon icon-right name='checkmark' *ngIf='activePlayers.indexOf(player) != -1'></ion-icon>
+        {{ player }}
+      </ion-item>
+    </ion-list>
+  </ion-scroll>
+
+  <button id='end-game' ion-button full color="danger" (click)='endGame()'>End Game</button>
+
+</ion-content>

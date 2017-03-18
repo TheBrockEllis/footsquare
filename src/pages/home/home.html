@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      Footsquare
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <h1>Logo here</h1>
+
+  <button ion-button color="primary" full (click)='createNewGame()'>New Game</button>
+
+  <ion-list>
+    <ion-item (click)='viewPlayers()'>
+      Manage Local Players
+    </ion-item>
+    <ion-item (click)='viewRulebook()'>
+      Rule Book
+    </ion-item>
+    <ion-item (click)='viewTutorials()'>
+      Video Tutorials
+    </ion-item>
+    <ion-item (click)='viewGames()'>
+      Past Games
+    </ion-item>
+  </ion-list>
+
+</ion-content>

@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Game Players</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-list>
+    <ion-item *ngFor='let player of players' (click)='togglePlayer(player)'>
+      <ion-icon name="leaf" item-left *ngIf='gamePlayers.indexOf(player) != -1'></ion-icon>
+      {{ player }}
+    </ion-item>
+  </ion-list>
+
+  <button ion-button full color="primary" (click)='dismiss()'>Done Selecting Players</button>
+
+</ion-content>

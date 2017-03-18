@@ -1,0 +1,17 @@
+<ion-content>
+
+  <ion-item *ngIf='!started'>
+    <ion-label>Timer</ion-label>
+    <ion-select [(ngModel)]="timer">
+      <ion-option value="1">1:00</ion-option>
+      <ion-option value="3">3:00</ion-option>
+      <ion-option value="5">5:00</ion-option>
+      <ion-option value="7">7:00</ion-option>
+      <ion-option value="9">9:00</ion-option>
+      <ion-option value="12">12:00</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <button ion-button clear full (click)='startTimer()'>Start</button>
+
+</ion-content>
