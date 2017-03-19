@@ -3,6 +3,7 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { PrettyTime } from '../pipes/pretty-time';
+import { Randomize } from '../pipes/randomize';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -23,7 +24,8 @@ import { GameTimerPage } from '../pages/game-timer/game-timer';
     GamePage,
     GamePlayerSelectPage,
     GameTimerPage,
-    PrettyTime
+    PrettyTime,
+    Randomize
   ],
   imports: [
     IonicModule.forRoot(MyApp),

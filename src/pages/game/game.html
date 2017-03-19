@@ -39,7 +39,7 @@
     <ion-card-content>
       <ion-list no-lines>
         <ion-item *ngFor='let move of game.moves'>
-          {{ move.killer }} {{ method() }} {{ move.killed }}
+          <p>{{ move.killer }} {{ methods | randomize }} {{ move.killed }}</p>
         </ion-item>
       </ion-list>
     </ion-card-content>
