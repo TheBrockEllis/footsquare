@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, ModalController, PopoverController, AlertController, reorderArray } from 'ionic-angular';
+import { NavController, ModalController, PopoverController, AlertController, ToastController, reorderArray } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs/Rx';
+import * as moment from 'moment';
 
 import { HomePage } from '../home/home';
 import { GamePlayerSelectPage } from '../game-player-select/game-player-select';
@@ -21,6 +22,7 @@ export class GamePlayPage {
   public regularSeason:boolean = true;
 
   public time:number = 0;
+  public timer:any;
   public currentTime:number = 0;
   public timeRemaining:string = "100%";
 
@@ -30,17 +32,25 @@ export class GamePlayPage {
     moves?:Array<any>
   } = {};
 
-  constructor(public nav:NavController, public storage:Storage, public modal:ModalController, public alert:AlertController, public popover:PopoverController) {}
+  constructor(public nav:NavController, public storage:Storage, public modal:ModalController, public alert:AlertController, public popover:PopoverController, public toast:ToastController) {}
 
   ionViewDidLoad() {
     // TEMPORARY - DELETE WHEN DONE
     this.storage.get('players').then( (data:any) => {
       this.gamePlayers = data;
-      this.game['players'] = data;
+
+      //deepCopy makes a new copy of the data so it's not passed by reference
+      this.game['players'] = this.deepCopy(data);
+
       this.setActivePlayers();
     });
+  }
 
-    //console.log('ionViewDidLoad GameSetupPage');
+  ionViewDidLeave(){
+    if(this.timer) {
+      console.log(this.timer);
+      this.timer.unsubscribe();
+    }
   }
 
   displayPlayerSelect(){
@@ -49,7 +59,10 @@ export class GamePlayPage {
     playerModal.onDidDismiss(data => {
       //console.log(data);
       this.gamePlayers = data;
-      this.game['players'] = data;
+
+      //deepCopy makes a new copy of the data so it's not passed by reference
+      this.game['players'] = this.deepCopy(data);
+
       this.setActivePlayers();
     });
 
@@ -64,13 +77,23 @@ export class GamePlayPage {
 
     popover.onDidDismiss( (time:number) => {
 
+      if(!time) return;
+
+      //console.log("time was returned");
+
+      let toast = this.toast.create({
+        message: 'Timer started!',
+        duration: 3000
+      });
+      toast.present();
+
       // we'll get back a number of minutes, so multiply by 60 to number of seconds
       this.time = time * 60;
       this.currentTime = time * 60;
       //console.log("Time and currentTime set to: ", time*60);
 
-      var timer = Observable.timer(1000, 1000);
-      timer
+      this.timer = Observable.timer(1000, 1000);
+      this.timer
       .takeWhile( () => this.regularSeason )
       .subscribe(tick => {
         //remove one second from the current time
@@ -79,7 +102,7 @@ export class GamePlayPage {
         //get the perentage of currentTime to total title
         let timeRemaining = (this.currentTime / this.time) * 100;
 
-        if(timeRemaining <= 0) { this.presentTimeout(); }
+        if(timeRemaining <= 0) { this.presentElimination(); }
 
         this.timeRemaining = timeRemaining + "%";
         //console.log("Time remaining: ", this.timeRemaining);
@@ -88,7 +111,7 @@ export class GamePlayPage {
     });
   }
 
-  presentTimeout(){
+  presentElimination(){
     this.regularSeason = false;
 
     let alert = this.alert.create({
@@ -97,7 +120,6 @@ export class GamePlayPage {
       buttons: [{
         text: 'Begin!',
         handler: data => {
-          //console.log('Elimination started');
           this.elimination = true;
         }
       }]
@@ -107,9 +129,44 @@ export class GamePlayPage {
 
   setActivePlayers(){
     this.activePlayers = [];
-    for(let i=3; i > -1; i--){
+
+    let limit = 3;
+    //if(this.gamePlayers.length < 3) limit = this.gamePlayers.length + 1;
+
+    // showdown should be index 2 and 3 (squares 3 and 4)
+
+    console.log("Using limit ", limit);
+
+    for(let i=limit; i > -1; i--){
       let player = this.gamePlayers[i];
+      //if(player) this.activePlayers.push(player);
+      if(!player) player = ''; // set empty player to X to preserve spacing
       this.activePlayers.push(player);
+    }
+
+    console.log(this.activePlayers.length);
+
+    // if we're in elimination and we've only got one player left, they're the winner!
+    if(this.elimination){
+      if(this.gamePlayers.length == 4){
+        let toast = this.toast.create({
+          message: 'Final four!',
+          duration: 3000
+        });
+        toast.present();
+      }
+
+      if(this.gamePlayers.length == 2){
+        let toast = this.toast.create({
+          message: 'The Showdown!',
+          duration: 3000
+        });
+        toast.present();
+      }
+
+      if(this.gamePlayers.length == 1){
+        this.processEndGame();
+      }
     }
   }
 
@@ -143,6 +200,9 @@ export class GamePlayPage {
   }
 
   addMove(){
+    // if we don't have all the needed data, just return
+    if(!this.pendingMove.killer || !this.pendingMove.killed) return;
+
     //console.log(this.pendingMove);
     this.moves.push(this.pendingMove);
 
@@ -165,8 +225,10 @@ export class GamePlayPage {
       this.gamePlayers.splice(this.findPlayerIndex(this.pendingMove.killed), 1);
     }
 
-    //add the killed player to the end of the array
-    this.gamePlayers.push(this.pendingMove.killed);
+    // if we're just playing normally, add the dead player to end of the list
+    if(!this.elimination && this.regularSeason){
+      this.gamePlayers.push(this.pendingMove.killed);
+    }
 
     //set the active 4 players, reset the pendingMove, and clear colors from app court
     this.setActivePlayers();
@@ -198,10 +260,30 @@ export class GamePlayPage {
 
   endGame(){
 
+    let confirm = this.alert.create({
+     title: 'Are you sure?',
+     message: 'You will not be able to make any additional changes to this game once it is ended.',
+     buttons: [
+       {text: 'No'},
+       {
+         text: 'Yes',
+         handler: () => {
+           this.processEndGame();
+           //console.log('Agree clicked');
+         }
+       }
+     ]
+   });
+   confirm.present();
+  }
+
+  processEndGame(){
     // only save this game is moves have taken place
     if(this.moves.length > 0){
+      console.log("Reported game players: ", this.game['players']);
+
       this.game['moves'] = this.moves;
-      this.game['date'] = new Date().toString();
+      this.game['date'] = moment().format('YYYY-MM-DD HH:mm');
 
       this.storage.get('games').then( (games:any) => {
         if(!games) games = [];
@@ -211,9 +293,30 @@ export class GamePlayPage {
       });
     }
 
-    alert('END GAME');
+    if(this.gamePlayers.length == 1){
+      let alert = this.alert.create({
+        title: 'Congratulations!',
+        subTitle: `${this.gamePlayers[0]} is the last man standing!`,
+        buttons: ['End game']
+      });
+      alert.present();
+    }
 
     this.nav.setRoot(HomePage);
+  }
+
+  /**
+   * Returns a deep copy of the object
+   */
+  deepCopy(oldObj: any) {
+      var newObj = oldObj;
+      if (oldObj && typeof oldObj === "object") {
+          newObj = Object.prototype.toString.call(oldObj) === "[object Array]" ? [] : {};
+          for (var i in oldObj) {
+              newObj[i] = this.deepCopy(oldObj[i]);
+          }
+      }
+      return newObj;
   }
 
 }

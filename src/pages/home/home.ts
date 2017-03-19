@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 
 import { PlayersPage } from '../players/players';
 import { GamesPage } from '../games/games';
+import { GamePlayPage } from '../game-play/game-play';
 
 @Component({
   selector: 'page-home',
@@ -20,6 +21,11 @@ export class HomePage {
 
   viewGames(){
     this.nav.push(GamesPage);
+  }
+
+  createNewGame(){
+    // set this as the root page because we don't want them to be able to leave it easily
+    this.nav.setRoot(GamePlayPage);
   }
 
 }

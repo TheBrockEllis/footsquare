@@ -1,6 +1,9 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
+
+import { PrettyTime } from '../pipes/pretty-time';
+
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { PlayersPage } from '../pages/players/players';
@@ -19,7 +22,8 @@ import { GameTimerPage } from '../pages/game-timer/game-timer';
     GamePlayPage,
     GamePage,
     GamePlayerSelectPage,
-    GameTimerPage
+    GameTimerPage,
+    PrettyTime
   ],
   imports: [
     IonicModule.forRoot(MyApp),

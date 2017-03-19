@@ -1,22 +1,35 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
-/*
-  Generated class for the Game page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 @Component({
   selector: 'page-game',
   templateUrl: 'game.html'
 })
 export class GamePage {
+  public game:any = {};
+  public methods:Array<string> = [
+    "took down",
+    "killed",
+    "eliminated",
+    "smacked",
+    "wasted",
+    "scorched",
+    "humiliated",
+    "belittled",
+    "dominated"
+  ]
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(public nav:NavController, public params:NavParams) {}
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad GamePage');
+    this.game = this.params.get('game');
+    //console.log(this.game);
+  }
+
+  method():string{
+    var random = Math.floor(Math.random() * this.methods.length + 1);
+    return this.methods[random];
+
   }
 
 }

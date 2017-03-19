@@ -12,8 +12,8 @@
 <ion-content padding>
 
   <ion-list>
-    <ion-item *ngFor='let game of games'>
-      {{ game.date }}
+    <ion-item *ngFor='let game of games' (click)='viewGame(game)'>
+      {{ game.date | prettyTime }}
     </ion-item>
   </ion-list>
 

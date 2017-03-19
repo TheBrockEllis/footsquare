@@ -1,8 +1,48 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>Game Recap</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+
+  <ion-card>
+    <ion-card-header>
+      Date
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list no-lines>
+        <ion-item>
+          {{ game.date }}
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      Players
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list no-lines>
+        <ion-item *ngFor='let player of game.players'>
+          {{ player }}
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      Moves
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list no-lines>
+        <ion-item *ngFor='let move of game.moves'>
+          {{ move.killer }} {{ method() }} {{ move.killed }}
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>

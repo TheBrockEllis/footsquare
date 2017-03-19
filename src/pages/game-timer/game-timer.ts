@@ -12,7 +12,7 @@ export class GameTimerPage {
   constructor(public nav:NavController, public view:ViewController) {}
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad GameTimerPage');
+    //console.log('ionViewDidLoad GameTimerPage');
   }
 
   startTimer(){

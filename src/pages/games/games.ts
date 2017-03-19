@@ -2,11 +2,14 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
+import { PrettyTime } from '../../pipes/pretty-time';
+
+import { GamePage } from '../game/game';
 import { GamePlayPage } from '../game-play/game-play';
 
 @Component({
   selector: 'page-games',
-  templateUrl: 'games.html'
+  templateUrl: 'games.html',
 })
 export class GamesPage {
   public games:Array<{date:string, players:Array<string>, moves:Array<{killer:string, killed:string, method:string}> }> = [];
@@ -23,10 +26,13 @@ export class GamesPage {
     });
   }
 
+  viewGame(game){
+    this.nav.push(GamePage, { game: game });
+  }
+
   createNewGame(){
     // set this as the root page because we don't want them to be able to leave it easily
     this.nav.setRoot(GamePlayPage);
-    //this.nav.push(GamePlayPage);
   }
 
 }

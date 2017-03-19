@@ -10,21 +10,30 @@
 
   <h1>Logo here</h1>
 
-  <button ion-button color="primary" full (click)='createNewGame()'>New Game</button>
-
   <ion-list>
+    <ion-list-header>Play</ion-list-header>
+    <ion-item (click)='createNewGame()'>
+      New Game
+      <ion-icon item-right name='arrow-forward'></ion-icon>
+    </ion-item>
     <ion-item (click)='viewPlayers()'>
       Manage Local Players
-    </ion-item>
-    <ion-item (click)='viewRulebook()'>
-      Rule Book
-    </ion-item>
-    <ion-item (click)='viewTutorials()'>
-      Video Tutorials
+      <ion-icon item-right name='arrow-forward'></ion-icon>
     </ion-item>
     <ion-item (click)='viewGames()'>
       Past Games
+      <ion-icon item-right name='arrow-forward'></ion-icon>
     </ion-item>
+    <ion-list-header>Learn</ion-list-header>
+    <ion-item (click)='viewRulebook()'>
+      Rule Book
+      <ion-icon item-right name='arrow-forward'></ion-icon>
+    </ion-item>
+    <ion-item (click)='viewTutorials()'>
+      Video Tutorials
+      <ion-icon item-right name='arrow-forward'></ion-icon>
+    </ion-item>
+
   </ion-list>
 
 </ion-content>
