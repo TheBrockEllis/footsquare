@@ -7,7 +7,7 @@ import * as moment from 'moment';
 @Injectable()
 export class PrettyTime {
   transform(value, args?:Array<any>) {
-    let time = moment(value).fromNow();
+    let time = moment(value).format('YYYY-MM-DD hh:mm a');
     return time;
   }
 }

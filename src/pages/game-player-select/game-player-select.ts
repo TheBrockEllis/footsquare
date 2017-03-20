@@ -16,7 +16,6 @@ export class GamePlayerSelectPage {
     this.gamePlayers = this.params.get('gamePlayers');
 
     this.loadPlayers();
-    console.log('ionViewDidLoad GamePlayerSelectPage');
   }
 
   loadPlayers(){
@@ -35,14 +34,15 @@ export class GamePlayerSelectPage {
   }
 
   addPlayer(player){
-    console.log("Adding player", player);
     this.gamePlayers.push(player);
   }
 
   removePlayer(index){
-    console.log("Removing player at index ", index);
-
     this.gamePlayers.splice(index, 1);
+  }
+
+  addAllPlayers(){
+    this.gamePlayers = this.players;
   }
 
   dismiss() {

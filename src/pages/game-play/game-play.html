@@ -22,21 +22,21 @@
   <!-- Squares here -->
   <ion-grid id="court">
     <ion-row>
-      <ion-col class="square" id="square-2" col-6 (click)='collectMoveData($event)'>
+      <ion-col tappable class="square" id="square-2" col-6 (click)='collectMoveData($event)'>
         <span class="square-number">2</span>
         <div class="square-player" id='square-2-player'>{{ activePlayers[1] }}</div>
       </ion-col>
-      <ion-col class="square" id="square-1" idcol-6 (click)='collectMoveData($event)'>
+      <ion-col tappable class="square" id="square-1" idcol-6 (click)='collectMoveData($event)'>
         <span class="square-number">1</span>
         <div class="square-player" id='square-1-player'>{{ activePlayers[0] }}</div>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col class="square" id="square-3" col-6 (click)='collectMoveData($event)'>
+      <ion-col tappable class="square" id="square-3" col-6 (click)='collectMoveData($event)'>
         <span class="square-number">3</span>
         <div class="square-player" id='square-3-player'>{{ activePlayers[2] }}</div>
       </ion-col>
-      <ion-col class="square" id="square-4" col-6 (click)='collectMoveData($event)'>
+      <ion-col tappable class="square" id="square-4" col-6 (click)='collectMoveData($event)'>
         <span class="square-number">4</span>
         <div class="square-player" id='square-4-player'>{{ activePlayers[3] }}</div>
       </ion-col>
@@ -47,15 +47,16 @@
   <button id="add-move" ion-button full color="primary" (click)='addMove()'>Add Move</button>
   <button id="cancel-move" ion-button full clear color="secondary" (click)='cancelMove()'>Cancel Move</button>
 
-  <ion-scroll scrollY="true">
-    <!-- List of players here -->
+  <ion-card>
+    <ion-card-header>
+      Game Players
+    </ion-card-header>
     <ion-list reorder="true" (ionItemReorder)="reorderPlayers($event)">
-      <ion-item *ngFor='let player of gamePlayers'>
-        <ion-icon icon-right name='checkmark' *ngIf='activePlayers.indexOf(player) != -1'></ion-icon>
-        {{ player }}
+      <ion-item *ngFor='let player of gamePlayers; let i=index'>
+        {{ player | playerSquare:i }}
       </ion-item>
     </ion-list>
-  </ion-scroll>
+  </ion-card>
 
   <button id='end-game' ion-button full color="danger" (click)='endGame()'>End Game</button>
 

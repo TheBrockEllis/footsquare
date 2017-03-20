@@ -35,4 +35,11 @@ export class GamesPage {
     this.nav.setRoot(GamePlayPage);
   }
 
+  getEliminationWinner(game){
+    let moves = game.moves;
+    let lastMove = moves[moves.length - 1];
+
+    return lastMove.killer;
+  }
+
 }

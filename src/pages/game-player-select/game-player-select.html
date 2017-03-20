@@ -6,6 +6,8 @@
 
 <ion-content padding>
 
+  <button ion-button full color="primary" (click)='addAllPlayers()'>Add All Players</button>
+
   <ion-list>
     <ion-item *ngFor='let player of players' (click)='togglePlayer(player)'>
       {{ player }}
@@ -13,6 +15,6 @@
     </ion-item>
   </ion-list>
 
-  <button ion-button full color="primary" (click)='dismiss()'>Done Selecting Players</button>
+  <button ion-button full color="danger" (click)='dismiss()'>Done Selecting Players</button>
 
 </ion-content>

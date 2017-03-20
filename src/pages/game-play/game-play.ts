@@ -19,8 +19,8 @@ export class GamePlayPage {
   public pendingMove:{killer?:string, killerIndex?:number, killed?:string, killedIndex?:number, method?:string} = {};
 
   public elimination:boolean = false;
-  public regularSeason:boolean = true;
 
+  public shouldTime:boolean = true;
   public time:number = 0;
   public timer:any;
   public currentTime:number = 0;
@@ -36,14 +36,14 @@ export class GamePlayPage {
 
   ionViewDidLoad() {
     // TEMPORARY - DELETE WHEN DONE
-    this.storage.get('players').then( (data:any) => {
-      this.gamePlayers = data;
-
-      //deepCopy makes a new copy of the data so it's not passed by reference
-      this.game['players'] = this.deepCopy(data);
-
-      this.setActivePlayers();
-    });
+    // this.storage.get('players').then( (data:any) => {
+    //   this.gamePlayers = data;
+    //
+    //   //deepCopy makes a new copy of the data so it's not passed by reference
+    //   this.game['players'] = this.deepCopy(data);
+    //
+    //   this.setActivePlayers();
+    // });
   }
 
   ionViewDidLeave(){
@@ -94,7 +94,7 @@ export class GamePlayPage {
 
       this.timer = Observable.timer(1000, 1000);
       this.timer
-      .takeWhile( () => this.regularSeason )
+      .takeWhile( () => this.shouldTime )
       .subscribe(tick => {
         //remove one second from the current time
         this.currentTime = this.currentTime - 1;
@@ -112,7 +112,7 @@ export class GamePlayPage {
   }
 
   presentElimination(){
-    this.regularSeason = false;
+    this.shouldTime = false;
 
     let alert = this.alert.create({
       title: 'ELIMINATION!',
@@ -135,7 +135,7 @@ export class GamePlayPage {
 
     // showdown should be index 2 and 3 (squares 3 and 4)
 
-    console.log("Using limit ", limit);
+    //console.log("Using limit ", limit);
 
     for(let i=limit; i > -1; i--){
       let player = this.gamePlayers[i];
@@ -144,7 +144,7 @@ export class GamePlayPage {
       this.activePlayers.push(player);
     }
 
-    console.log(this.activePlayers.length);
+    //console.log(this.activePlayers.length);
 
     // if we're in elimination and we've only got one player left, they're the winner!
     if(this.elimination){
@@ -226,7 +226,7 @@ export class GamePlayPage {
     }
 
     // if we're just playing normally, add the dead player to end of the list
-    if(!this.elimination && this.regularSeason){
+    if(!this.elimination && this.shouldTime){
       this.gamePlayers.push(this.pendingMove.killed);
     }
 
@@ -279,7 +279,7 @@ export class GamePlayPage {
 
   processEndGame(){
     // only save this game is moves have taken place
-    if(this.moves.length > 0){
+    if(this.moves && this.moves.length > 0){
       console.log("Reported game players: ", this.game['players']);
 
       this.game['moves'] = this.moves;
@@ -293,7 +293,7 @@ export class GamePlayPage {
       });
     }
 
-    if(this.gamePlayers.length == 1){
+    if(this.gamePlayers && this.gamePlayers.length == 1){
       let alert = this.alert.create({
         title: 'Congratulations!',
         subTitle: `${this.gamePlayers[0]} is the last man standing!`,
@@ -302,6 +302,9 @@ export class GamePlayPage {
       alert.present();
     }
 
+    // turn the timer off if we're leaving the game mid-way and the timer Observable is still running
+    this.shouldTime = false;
+    
     this.nav.setRoot(HomePage);
   }
 
