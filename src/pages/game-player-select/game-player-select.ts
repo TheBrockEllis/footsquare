@@ -42,7 +42,10 @@ export class GamePlayerSelectPage {
   }
 
   addAllPlayers(){
-    this.gamePlayers = this.players;
+    this.players.forEach( (player:string) => {
+      // add the player if they aren't already added
+      if(this.gamePlayers.indexOf(player) == -1) this.gamePlayers.push(player);
+    });
   }
 
   dismiss() {
