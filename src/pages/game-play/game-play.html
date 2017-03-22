@@ -54,6 +54,7 @@
     <ion-list reorder="true" (ionItemReorder)="reorderPlayers($event)">
       <ion-item *ngFor='let player of gamePlayers; let i=index'>
         {{ player | playerSquare:i }}
+        <ion-badge item-right>{{ scores[player] }}</ion-badge>
       </ion-item>
     </ion-list>
   </ion-card>

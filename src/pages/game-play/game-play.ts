@@ -20,6 +20,8 @@ export class GamePlayPage {
 
   public elimination:boolean = false;
 
+  public scores:any = {};
+
   public shouldTime:boolean = true;
   public time:number = 0;
   public timer:any;
@@ -59,6 +61,8 @@ export class GamePlayPage {
     playerModal.onDidDismiss(data => {
       //console.log(data);
       this.gamePlayers = data;
+
+      this.initScores();
 
       //deepCopy makes a new copy of the data so it's not passed by reference
       this.game['players'] = this.deepCopy(data);
@@ -111,6 +115,14 @@ export class GamePlayPage {
     });
   }
 
+  initScores(){
+    this.gamePlayers.forEach( (player) => {
+      if(!this.scores[player]) this.scores[player] = 0;
+    });
+
+    console.log("Scores init'd: ", this.scores);
+  }
+
   presentElimination(){
     this.shouldTime = false;
 
@@ -140,7 +152,7 @@ export class GamePlayPage {
     for(let i=limit; i > -1; i--){
       let player = this.gamePlayers[i];
       //if(player) this.activePlayers.push(player);
-      if(!player) player = ''; // set empty player to X to preserve spacing
+      if(!player) player = ''; // set empty player to preserve spacing
       this.activePlayers.push(player);
     }
 
@@ -202,6 +214,15 @@ export class GamePlayPage {
   addMove(){
     // if we don't have all the needed data, just return
     if(!this.pendingMove.killer || !this.pendingMove.killed) return;
+
+    // SCORES: give 1 point to all players who haven't been killed
+    this.activePlayers.forEach( (player) => {
+      if(player != this.pendingMove.killed){
+        this.scores[player]++;
+      }
+    });
+
+    console.log("Updated Scores: ", this.scores);
 
     //console.log(this.pendingMove);
     this.moves.push(this.pendingMove);
@@ -284,6 +305,7 @@ export class GamePlayPage {
 
       this.game['moves'] = this.moves;
       this.game['date'] = moment().format('YYYY-MM-DD HH:mm');
+      this.game['scores'] = this.scores;
 
       this.storage.get('games').then( (games:any) => {
         if(!games) games = [];
@@ -304,7 +326,7 @@ export class GamePlayPage {
 
     // turn the timer off if we're leaving the game mid-way and the timer Observable is still running
     this.shouldTime = false;
-    
+
     this.nav.setRoot(HomePage);
   }
 

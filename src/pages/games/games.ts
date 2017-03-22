@@ -42,4 +42,18 @@ export class GamesPage {
     return lastMove.killer;
   }
 
+  getHighestScoreWinner(game){
+    let winners = [];
+    let highestScore = 0;
+
+    game.players.forEach( (player) => {
+      if(game.scores[player] >= highestScore){
+        highestScore = game.scores[player];
+        winners.push(player);
+      }
+    });
+
+    return winners.join(" ");
+  }
+
 }

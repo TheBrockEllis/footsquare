@@ -23,7 +23,7 @@ export class GamePage {
 
   ionViewDidLoad() {
     this.game = this.params.get('game');
-    //console.log(this.game);
+    //console.log(this.game.scores);
   }
 
   method():string{

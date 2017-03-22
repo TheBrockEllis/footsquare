@@ -14,7 +14,8 @@
   <ion-list>
     <ion-item *ngFor='let game of games | reverse' (click)='viewGame(game)'>
       <h3 class="gameGate">{{ game.date | prettyTime }}</h3>
-      <p> Winner: {{ getEliminationWinner(game) }} </p>
+      <p> Elimination: {{ getEliminationWinner(game) }} </p>
+      <p> Highest Score: {{ getHighestScoreWinner(game) }} </p>
     </ion-item>
   </ion-list>
 
